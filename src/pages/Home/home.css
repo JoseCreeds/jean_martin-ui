@@ -1,0 +1,178 @@
+* {}
+
+.homeWrapper {
+    overflow-y: hidden;
+    overflow-x: hidden;
+    margin: 0;
+    min-height: 91vh;
+    height: auto;
+    width: 100%;
+    background-color: rgb(0, 0, 0);
+    /* background-color: #1e40af58; */
+    background-image: url('../../img/bg.jpg');
+    /* filter: brightness(90%); */
+
+
+
+}
+
+.homeWrapper_subContainer {
+    min-height: inherit;
+    height: auto;
+    padding: 10px 25px 50px;
+    margin: 0;
+    background-color: rgba(70, 118, 206, 0.71);
+    /* font-weight: 600; */
+}
+
+.homeWrapper h1 {
+    position: absolute;
+    font-style: italic;
+    top: 0px;
+    left: 15px;
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 50px;
+    font-variant: small-caps;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.qfa {
+    position: absolute;
+    font-style: italic;
+    top: 0px;
+    right: 45px;
+    color: #ffffff;
+    font-size: 25px;
+    font-weight: 500;
+    margin-bottom: 50px;
+    font-variant: small-caps;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.homeWrapper h2 {
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 500;
+    margin-top: 100px;
+    margin-bottom: 15px;
+    max-width: 400px;
+    margin-left: 4%;
+    /* font-family: Georgia, 'Times New Roman', Times, serif; */
+    /* font-synthesis-weight: normal; */
+}
+
+.homeWrapper p {
+    color: #ffffff;
+    font-size: 25px;
+    font-weight: 300;
+    max-width: 700px;
+    margin-bottom: 50px;
+    margin-left: 4%;
+
+}
+
+.homeWrapper .home_btn {
+    font-size: 18px;
+    padding: 7px 20px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: 15px;
+    margin-left: 4%;
+
+}
+
+.homeWrapper .signup {
+    color: #ffffff;
+    background-color: #fbbf24;
+}
+
+.homeWrapper .signup:hover {
+    color: #fbbf24;
+    border-color: #fbbf24;
+    background-color: transparent;
+    transition-duration: 0.3s;
+
+}
+
+.homeWrapper .login {
+    color: #fbbf24;
+    background-color: transparent;
+    border-color: #fbbf24;
+    margin-left: 25px;
+    transition-duration: 0.3s;
+}
+
+.homeWrapper .login:hover {
+
+    color: #ffffff;
+    background-color: #fbbf24;
+
+}
+
+
+
+
+/* footer */
+.footer_container {
+    /* position: absolute; */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
+    margin: 0 auto;
+    bottom: 10px;
+    padding: 0 20px;
+}
+
+.logo_footer {
+    /* font-size: 50px; */
+    color: #ffffff;
+}
+
+.logo_footer>img {
+    position: absolute;
+    bottom: 25px;
+    width: 145px;
+    height: 145px;
+}
+
+.btn_contact {
+    position: absolute;
+    bottom: 55px;
+    right: calc(50% - 105px);
+}
+
+.btn_contact>button {
+    font-size: 16px;
+    padding: 7px 25px;
+    color: #ffffff;
+    font-weight: 500;
+    border: 1px solid transparent;
+    border-color: #ffffff;
+    border-radius: 15px;
+    background-color: transparent;
+    transition-duration: 0.2s;
+
+}
+
+.btn_contact>button:hover {
+    /* font-size: 20px; */
+    letter-spacing: 5px;
+}
+
+.icons_content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 18%;
+    position: absolute;
+    bottom: 55px;
+    right: 125px;
+}
+
+ion-icon {
+    font-size: 32px;
+    color: #ffffff;
+}

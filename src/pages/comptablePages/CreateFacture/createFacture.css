@@ -1,0 +1,43 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.invoice {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.client-info,
+.items,
+.total {
+    margin-bottom: 20px;
+}
+
+.items .item {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.total {
+    text-align: right;
+}
+
+h1,
+h2 {
+    margin: 0;
+}
+
+p {
+    margin: 5px 0;
+}
