@@ -1,10 +1,41 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { Suspense, useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Logo_one from '../../../img/document.png'
 import './adminDashbord.css'
 import Meeting from '../../../img/meeting.png'
 
 function AdminDashbord() {
+  const navigate = useNavigate()
+  const token = localStorage.getItem('token')
+  const [allServices, setServices] = useState({})
+
+  const logout = () => {
+    localStorage.clear()
+  }
+
+  useEffect(() => {
+    if (token) {
+      fetch(`http://127.0.0.1:8000/api/service`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`, // Inclure le token JWT dans l'en-tête Authorization
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setServices(data)
+          // setIsLoading(false) // Mettre isLoading à false une fois les données chargées
+        })
+        .catch((error) => {
+          // console.error('Error fetching user data:', error)
+          // setIsLoading(false) // isLoading à false même en cas d'erreur
+        })
+    } else {
+      localStorage.clear()
+      navigate('/login')
+    }
+  }, [token, navigate]) // token dans les dépendances pour recharger les données lorsque user token change
+
   return (
     <div>
       <div className="contain_header">
@@ -14,6 +45,7 @@ function AdminDashbord() {
               style={{ textDecoration: 'none', color: 'black' }}
               to="/"
               className="btn decon"
+              onClick={logout}
             >
               Deconnexion
             </Link>
@@ -64,7 +96,32 @@ function AdminDashbord() {
         <div className="separator"></div>
       </div>
 
-      <p>hi</p>
+      <Suspense fallback={<div> Loading data... </div>}>
+        <div className="list_table">
+          <table>
+            <tr>
+              <th style={{ width: '10%' }}>ID</th>
+              <th style={{ width: '20%' }}>Libellé</th>
+              <th style={{ width: '50%' }}>Description</th>
+              <th style={{ width: '10%' }}>Prix</th>
+              <th style={{ width: '10%' }}>Action</th>
+            </tr>
+            {Object.values(allServices).map((service) => (
+              <tr key={service.id}>
+                <td>{service.id}</td>
+                <td>{service.libelle}</td>
+                <td>{service.description}</td>
+                <td>
+                  {service.prix_ht + service.prix_ht * service.taux_tva} FCFA
+                </td>
+                <td>
+                  <a href={`/modify_service/${service.id}`}>Editer</a>
+                </td>
+              </tr>
+            ))}
+          </table>
+        </div>
+      </Suspense>
     </div>
   )
 }

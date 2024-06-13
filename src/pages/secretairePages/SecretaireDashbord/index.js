@@ -1,11 +1,44 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 // import Logo_one from '../../img/document.png'
 import Logo_one from '../../../img/document.png'
 import Search_logo from '../../../img/search.svg'
 import './secretaireDashbord.css'
 
+import { Suspense } from 'react'
+
 function SecretaireDashbord() {
+  const navigate = useNavigate()
+  const token = localStorage.getItem('token')
+  const [allUsers, setUsers] = useState({})
+
+  const logout = () => {
+    localStorage.clear()
+  }
+
+  useEffect(() => {
+    if (token) {
+      fetch(`http://127.0.0.1:8000/api/getallusers`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`, // Inclure le token JWT dans l'en-tête Authorization
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setUsers(data)
+          // setIsLoading(false) // Mettre isLoading à false une fois les données chargées
+        })
+        .catch((error) => {
+          // console.error('Error fetching user data:', error)
+          // setIsLoading(false) // isLoading à false même en cas d'erreur
+        })
+    } else {
+      localStorage.clear()
+      navigate('/login')
+    }
+  }, [token, navigate]) // token dans les dépendances pour recharger les données lorsque user token change
+
   return (
     <div>
       <div className="contain_header">
@@ -15,6 +48,7 @@ function SecretaireDashbord() {
               style={{ textDecoration: 'none', color: 'black' }}
               to="/"
               className="but decon"
+              onClick={logout}
             >
               Deconnexion
             </Link>
@@ -41,22 +75,6 @@ function SecretaireDashbord() {
           >
             Inscrire un client
           </Link>
-
-          {/* <Link
-            style={{ textDecoration: 'none', color: 'black' }}
-            to=""
-            className="but"
-          >
-            Consulter les crtiques sur un agent
-          </Link>
-
-          <Link
-            style={{ textDecoration: 'none', color: 'black' }}
-            to="/getrapport"
-            className="but" 
-          >
-            Consulter un rapport
-          </Link> */}
         </div>
       </div>
 
@@ -71,47 +89,34 @@ function SecretaireDashbord() {
         />
       </div>
       {/* <div className="search_bar"></div> */}
-
-      <div className="list_table">
-        <table>
-          <tr>
-            <th>ID</th>
-            <th>E-mail</th>
-            <th>Nom</th>
-            <th>Prénoms</th>
-            <th>Adresse</th>
-            <th>Téléphone</th>
-            <th>Actions</th>
-          </tr>
-          <tr>
-            <td>Alfreds Futterkiste</td>
-            <td>Maria Anders</td>
-            <td>Germany</td>
-            <td>Alfreds Futterkiste</td>
-            <td>Maria Anders</td>
-            <td>Germany</td>
-            <td>
-              <a href="/#">Editer</a>
-            </td>
-          </tr>
-          <tr>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-          </tr>
-          <tr>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-          </tr>
-        </table>
-      </div>
+      <Suspense fallback={<div> Loading data... </div>}>
+        <div className="list_table">
+          <table>
+            <tr>
+              <th>ID</th>
+              <th>E-mail</th>
+              <th>Nom</th>
+              <th>Prénoms</th>
+              <th>Adresse</th>
+              <th>Téléphone</th>
+              <th>Actions</th>
+            </tr>
+            {Object.values(allUsers).map((user) => (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td>{user.email}</td>
+                <td>{user.nom}</td>
+                <td>{user.prenom}</td>
+                <td>{user.adresse}</td>
+                <td>{user.telephone}</td>
+                <td>
+                  <a href={`/modifyprofil/${user.id}`}>Editer</a>
+                </td>
+              </tr>
+            ))}
+          </table>
+        </div>
+      </Suspense>
     </div>
   )
 }

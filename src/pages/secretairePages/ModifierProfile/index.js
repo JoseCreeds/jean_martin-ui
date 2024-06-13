@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Suspense } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import Logo_one from '../../../img/document.png'
+import '../InscrireClient/inscrireClient.css'
 
-function UpdateServices() {
+function ModifierProfile() {
   const navigate = useNavigate()
   const [userData, setUserData] = useState({
-    libelle: '',
-    description: '',
-    prix: '',
+    email: '',
+    nom: '',
+    prenom: '',
+    adresse: '',
+    telephone: '',
   })
   const token = localStorage.getItem('token')
   const { id } = useParams()
@@ -22,7 +25,7 @@ function UpdateServices() {
 
   useEffect(() => {
     if (token) {
-      fetch(`http://127.0.0.1:8000/api/service/${id}`, {
+      fetch(`http://127.0.0.1:8000/api/getuser/${id}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`, // Inclure le token JWT dans l'en-tête Authorization
@@ -42,7 +45,7 @@ function UpdateServices() {
 
   const modifyProfile = () => {
     if (userData) {
-      fetch(`http://127.0.0.1:8000/api/service/${id}`, {
+      fetch(`http://127.0.0.1:8000/api/updateprofile/${id}`, {
         method: 'PUT',
         headers: {
           // Authorization: `Bearer ${token}`,
@@ -53,7 +56,7 @@ function UpdateServices() {
       })
         .then((response) => response.json())
         .then(() => {
-          navigate(`/modify_service/${id}`)
+          navigate(`/modifyprofil/${id}`)
           setSuccess('User data updated !')
         })
         .catch((error) => {
@@ -70,7 +73,7 @@ function UpdateServices() {
         <div className="contain_nav_confirme">
           <Link
             style={{ textDecoration: 'none', color: 'black' }}
-            to="/adminDashbord"
+            to="/secretaireDashbord"
             className="retour"
           >
             Retour
@@ -88,7 +91,7 @@ function UpdateServices() {
           }}
           className="title"
         >
-          Modifier un service
+          Modifier les informations du client
         </h2>
       </div>
 
@@ -102,60 +105,65 @@ function UpdateServices() {
         >
           {success}
         </h3>
-        <input
-          type="text"
-          name="libelle"
-          value={userData.libelle}
-          onChange={handleInputChange}
-          className="con_inpone_rapport"
-          placeholder="Libellé"
-        />
+        <Suspense fallback={<div> Loading data... </div>}>
+          <input
+            type="email"
+            name="email"
+            value={userData.email}
+            onChange={handleInputChange}
+            className="con_inpone_rapport"
+            placeholder="E-mail"
+          />
 
-        <textarea
-          className="con_inpone_rapport"
-          type="text"
-          value={userData.description}
-          placeholder="Description"
-          onChange={handleInputChange}
-          name="description"
-          label="description"
-          rows="15"
-        >
-          Description
-        </textarea>
+          <input
+            className="con_inpone_rapport"
+            type="text"
+            value={userData.nom}
+            placeholder="Nom"
+            onChange={handleInputChange}
+            name="nom"
+            label="Nom"
+          />
 
-        <input
-          className="con_inpone_rapport"
-          type="text"
-          value={userData.prix_ht}
-          placeholder="Prix"
-          onChange={handleInputChange}
-          name="prix_ht"
-          label="prix"
-        />
+          <input
+            className="con_inpone_rapport"
+            type="text"
+            value={userData.prenom}
+            placeholder="Prenom"
+            onChange={handleInputChange}
+            name="prenom"
+            label="Prenom"
+          />
+          <input
+            className="con_inpone_rapport"
+            type="text"
+            value={userData.adresse}
+            placeholder="Adresse"
+            onChange={handleInputChange}
+            name="adresse"
+            label="Adresse"
+          />
 
-        {/* <input
-          className="con_inpone_rapport"
-          type="text"
-          // placeholder="Téléphone"
-          // onChange={(e) => {
-          //   setTel(e.target.value)
-          // }}
-          value="1.67"
-          readOnly
-          name="tel"
-          label="tel"
-          hidden
-        /> */}
+          <input
+            className="con_inpone_rapport"
+            type="text"
+            value={userData.telephone}
+            placeholder="Téléphone"
+            onChange={handleInputChange}
+            name="telephone"
+            label="telephone"
+          />
 
-        <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>
+          <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>
 
-        <button onClick={modifyProfile} className="send_rapport">
-          Modifier
-        </button>
+          <button onClick={modifyProfile} className="send_rapport">
+            Modifier
+          </button>
+        </Suspense>
       </div>
     </div>
+    // </div>
   )
 }
 
-export default UpdateServices
+export default ModifierProfile

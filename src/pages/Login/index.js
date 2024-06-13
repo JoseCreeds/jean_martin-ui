@@ -6,7 +6,7 @@ import Userlog from '../../img/user.png'
 import Logo_one from '../../img/buildings.png'
 
 export default function Login() {
-  const [num_matricul, setNumMatricule] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
@@ -23,9 +23,9 @@ export default function Login() {
   }
 
   const checkEmptyData = () => {
-    if (password === '' || num_matricul === '') {
+    if (password === '' || email === '') {
       setError('Aucun champs vide')
-    } else if (password !== '' && num_matricul !== '') {
+    } else if (password !== '' && email !== '') {
       setError('')
 
       const token = localStorage.getItem('token')
@@ -33,63 +33,54 @@ export default function Login() {
       if (!token) {
         localStorage.setItem('token', generateRandomToken())
 
-        fetch(`https://gesperform.online/public/api/backend/handletoken`, {
+        fetch(`http://127.0.0.1:8000/api/handletoken`, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
             //'Content-Type':'application/json'
           },
           body: JSON.stringify({
-            num_matricul: num_matricul,
+            email: email,
             token: localStorage.getItem('token'),
           }),
         }).then((response) => response.json())
       }
 
-      fetch(`https://gesperform.online/public/api/connectbenincontroluser`, {
+      fetch(`http://localhost:8000/api/login`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          num_matricul: num_matricul,
+          email: email,
           password: password,
         }),
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data)
-
-          if (
-            data.statut === 'OK' &&
-            data.user[0].type_utilisateur === 'client'
-          ) {
-            window.location.replace('../../clientPages/ClientDasbord')
-            localStorage.setItem(
-              'employee_detail',
-              JSON.stringify(data.user[0])
-            )
+          // console.log(data)
+          if (data.statut === 'OK' && data.user.typeofuser === 'client') {
+            window.location.replace('/clientdashbord')
+            localStorage.setItem('user_detail', JSON.stringify(data.user.id))
           } else if (
             data.statut === 'OK' &&
-            data.user[0].type_utilisateur === 'client'
+            data.user.typeofuser === 'secretaire'
           ) {
-            window.location.replace('./Acceuilclient')
-            localStorage.setItem('client_detail', JSON.stringify(data.user[0]))
+            window.location.replace('/secretaireDashbord')
+            localStorage.setItem('user_detail', JSON.stringify(data.user.id))
           } else if (
             data.statut === 'OK' &&
-            data.user[0].type_utilisateur === 'superviseur'
+            data.user.typeofuser === 'comptable'
           ) {
-            window.location.replace('./superviseur')
-            localStorage.setItem('client_detail', JSON.stringify(data.user[0]))
-          } else if (
-            data.statut === 'OK' &&
-            data.user[0].type_utilisateur === 'admin'
-          ) {
-            window.location.replace('./admindashboard')
-            localStorage.setItem('client_detail', JSON.stringify(data.user[0]))
-          } else if (data.statut === 'Bad credentials')
+            window.location.replace('/comptableDashbord')
+            localStorage.setItem('user_detail', JSON.stringify(data.user.id))
+          } else if (data.statut === 'OK' && data.user.typeofuser === 'admin') {
+            window.location.replace('/adminDashbord')
+            localStorage.setItem('user_detail', JSON.stringify(data.user.id))
+          } else {
             setError('Mauvais identifiants')
+          }
         })
     }
   }
@@ -113,14 +104,16 @@ export default function Login() {
           factures
         </h4>
 
-        <h2 className="">Se connecter</h2>
+        <h2 className="" style={{ marginBottom: '7px' }}>
+          Se connecter
+        </h2>
       </div>
 
       <div className="contain_secondpart">
         <div className="contain_form">
           <input
             onChange={(e) => {
-              setNumMatricule(e.target.value)
+              setEmail(e.target.value)
             }}
             className="con_inpone"
             type="email"
@@ -141,7 +134,7 @@ export default function Login() {
           <h3 style={{ color: 'red' }}> {error} </h3>
 
           <Link
-            // onClick={connectUsers}
+            onClick={connectUsers}
             style={{ textDecoration: 'none' }}
             to=""
             className="connect_me"

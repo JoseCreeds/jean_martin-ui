@@ -11,17 +11,13 @@ import ModifyService from './pages/adminPages/UpdateServices'
 
 import ComptableDashbord from './pages/comptablePages/ComptableDashbord'
 import CreateFacture from './pages/comptablePages/CreateFacture'
+import GenerateFactureFacture from './pages/comptablePages/GenerateFacture'
 
 import SecretaireDashbord from './pages/secretairePages/SecretaireDashbord'
 import InsertClient from './pages/secretairePages/InscrireClient'
-import ModifyClientProfil from './pages/secretairePages/Modifierprofil'
+import ModifyClientProfile from './pages/secretairePages/ModifierProfile'
 
-/* <a
-className="App-link"
-href="https://reactjs.org"
-target="_blank"
-rel="noopener noreferrer"
-> */
+import ClientDashbord from './pages/clientPages/ClientDashbord'
 
 function App() {
   return (
@@ -34,17 +30,24 @@ function App() {
         {/* Admin routes */}
         <Route path="/adminDashbord" element={<AdminDashbord />} />
         <Route path="/create_service" element={<CreateService />} />
-        <Route path="/modify_service" element={<ModifyService />} />
+        <Route path="/modify_service/:id" element={<ModifyService />} />
 
         {/* Comptable routes */}
         <Route path="/comptableDashbord" element={<ComptableDashbord />} />
-        <Route path="/create_facture" element={<CreateFacture />} />
+        <Route path="/create&facture/:facture_id" element={<CreateFacture />} />
+        <Route
+          path="/generatefacture/:user_id"
+          element={<GenerateFactureFacture />}
+        />
         {/* <Route path="/modify_service" element={<ModifyService />} /> */}
 
         {/* Secretaire routes */}
         <Route path="/secretaireDashbord" element={<SecretaireDashbord />} />
         <Route path="/insertClient" element={<InsertClient />} />
-        <Route path="/modifyProfil" element={<ModifyClientProfil />} />
+        <Route path="/modifyprofil/:id" element={<ModifyClientProfile />} />
+
+        {/* Client routes */}
+        <Route path="/clientdashbord" element={<ClientDashbord />} />
       </Routes>
       <Footer />
     </Router>

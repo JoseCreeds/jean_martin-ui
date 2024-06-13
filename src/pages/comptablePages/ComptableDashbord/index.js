@@ -1,10 +1,37 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect, Suspense } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Logo_one from '../../../img/document.png'
 import Search_logo from '../../../img/search.svg'
 import './comptableDashbord.css'
 
 function ComptableDashbord() {
+  const navigate = useNavigate()
+  const token = localStorage.getItem('token')
+  const [allUsers, setUsers] = useState({})
+
+  const logout = () => {
+    localStorage.clear()
+  }
+
+  useEffect(() => {
+    if (token) {
+      fetch(`http://127.0.0.1:8000/api/getallusers`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setUsers(data)
+        })
+        .catch((error) => {})
+    } else {
+      localStorage.clear()
+      navigate('/login')
+    }
+  }, [token, navigate])
+
   return (
     <div>
       <div className="contain_header">
@@ -14,6 +41,7 @@ function ComptableDashbord() {
               style={{ textDecoration: 'none', color: 'black' }}
               to="/"
               className="but decon"
+              onClick={logout}
             >
               Deconnexion
             </Link>
@@ -33,31 +61,7 @@ function ComptableDashbord() {
           </div>
         </div>
 
-        <div className="contain_menus">
-          <Link
-            style={{ textDecoration: 'none', color: 'black' }}
-            to="/insertClient"
-            className="but"
-          >
-            Inscrire un client
-          </Link>
-
-          {/* <Link
-            style={{ textDecoration: 'none', color: 'black' }}
-            to=""
-            className="but"
-          >
-            Consulter les crtiques sur un agent
-          </Link>
-
-          <Link
-            style={{ textDecoration: 'none', color: 'black' }}
-            to="/getrapport"
-            className="but" 
-          >
-            Consulter un rapport
-          </Link> */}
-        </div>
+        <div className="contain_menus"></div>
       </div>
 
       <div className="search_container">
@@ -70,48 +74,33 @@ function ComptableDashbord() {
           className="search_img"
         />
       </div>
-      {/* <div className="search_bar"></div> */}
+      <Suspense fallback={<div> Loading data... </div>}>
+        <div className="list_table">
+          <table>
+            <tr>
+              <th>ID</th>
+              <th>E-mail</th>
+              <th>Nom</th>
+              <th>Prénoms</th>
+              <th>Action</th>
+            </tr>
+            {Object.values(allUsers).map((user) => (
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td>{user.email}</td>
+                <td>{user.nom}</td>
+                <td>{user.prenom}</td>
 
-      <div className="list_table">
-        <table>
-          <tr>
-            <th>ID</th>
-            <th>E-mail</th>
-            <th>Nom</th>
-            <th>Prénoms</th>
-            <th>Adresse</th>
-            <th>Téléphone</th>
-            <th>Actions</th>
-          </tr>
-          <tr>
-            <td>Alfreds Futterkiste</td>
-            <td>Maria Anders</td>
-            <td>Germany</td>
-            <td>Alfreds Futterkiste</td>
-            <td>Maria Anders</td>
-            <td>Germany</td>
-            <td>
-              <a href="/#">Editer</a>
-            </td>
-          </tr>
-          <tr>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-          </tr>
-          <tr>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-            <td>Centro comercial Moctezuma</td>
-            <td>Francisco Chang</td>
-            <td>Mexico</td>
-          </tr>
-        </table>
-      </div>
+                <td>
+                  <a href={`/generatefacture/${user.id}`}>
+                    Editer nouvelle facture
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </table>
+        </div>
+      </Suspense>
     </div>
   )
 }

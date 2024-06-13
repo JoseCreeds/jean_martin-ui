@@ -13,7 +13,7 @@ function InscrireClient() {
     nom: '',
     prenom: '',
     adresse: '',
-    tel: '',
+    telephone: '',
   })
 
   const handleInputChange = (e) => {
@@ -33,40 +33,39 @@ function InscrireClient() {
 
   const insertUser = () => {
     if (checkEmptyData(formData)) {
-      fetch(`https://gesperform.online/public/api/insertbenincontroluser`, {
+      fetch(`http://127.0.0.1:8000/api/register`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
+      }).then((response) => {
+        if (response) {
+          navigate('/insertClient')
+          setError('')
+          setFormData({
+            email: '',
+            nom: '',
+            prenom: '',
+            adresse: '',
+            telephone: '',
+          })
+          setSuccess('New client successfully added !')
+        } else {
+          setSuccess('')
+          setError('Something is wrong. Refresh the page and try again.')
+        }
       })
-        .then((response) => {
-          if (response.ok) {
-            navigate('/inscrireClient')
-            setError('')
-            setFormData({
-              email: '',
-              nom: '',
-              prenom: '',
-              adresse: '',
-              tel: '',
-            })
-            setSuccess('Your message has been sent successfully!')
-          } else {
-            setSuccess('')
-            setError('Something is wrong. Refresh the page and try again.')
-          }
-        })
-        .then((data) => {
-          console.log(data)
+      // .then((data) => {
+      //   console.log(data)
 
-          if (data.errors !== undefined) {
-            setError('Aucun champs vide ')
-          } else {
-            setError(data.statut)
-          }
-        })
+      //   if (data.errors !== undefined) {
+      //     setError('Aucun champs vide ')
+      //   } else {
+      //     setError(data.statut)
+      //   }
+      // })
     } else {
       setError('No empty fields !')
     }
@@ -88,7 +87,14 @@ function InscrireClient() {
           <img src={Logo_one} className="img_confirm" alt="" />
         </div>
 
-        <h2 style={{ color: '#ffffff', textAlign: 'center' }} className="title">
+        <h2
+          style={{
+            color: '#ffffff',
+            textAlign: 'center',
+            marginBottom: '10px',
+          }}
+          className="title"
+        >
           Enregistrer un nouveau client
         </h2>
       </div>
@@ -147,21 +153,8 @@ function InscrireClient() {
           value={formData.tel}
           placeholder="Téléphone"
           onChange={handleInputChange}
-          name="tel"
-          label="tel"
-        />
-        <input
-          className="con_inpone_rapport"
-          type="text"
-          // placeholder="Téléphone"
-          // onChange={(e) => {
-          //   setTel(e.target.value)
-          // }}
-          value="1.67"
-          readOnly
-          name="tel"
-          label="tel"
-          hidden
+          name="telephone"
+          label="telephone"
         />
 
         <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>

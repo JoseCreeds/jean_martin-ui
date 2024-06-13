@@ -11,7 +11,7 @@ function CreateServices() {
   const [formData, setFormData] = useState({
     libelle: '',
     description: '',
-    prix: '',
+    prix_ht: '',
   })
 
   const handleInputChange = (e) => {
@@ -29,9 +29,9 @@ function CreateServices() {
     return true
   }
 
-  const insertUser = () => {
+  const createService = () => {
     if (checkEmptyData(formData)) {
-      fetch(`https://gesperform.online/public/api/insertbenincontroluser`, {
+      fetch(`http://127.0.0.1:8000/api/service`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -46,7 +46,7 @@ function CreateServices() {
             setFormData({
               libelle: '',
               description: '',
-              prix: '',
+              prix_ht: '',
             })
             setSuccess('Service creatd !')
           } else {
@@ -55,13 +55,12 @@ function CreateServices() {
           }
         })
         .then((data) => {
-          console.log(data)
-
-          if (data.errors !== undefined) {
-            setError('No empty fields ! ')
-          } else {
-            setError(data.statut)
-          }
+          // console.log(data)
+          // if (data.errors !== undefined) {
+          //   setError('No empty fields ! ')
+          // } else {
+          //   setError(data.statut)
+          // }
         })
     } else {
       setError('No empty fields !')
@@ -84,7 +83,14 @@ function CreateServices() {
           <img src={Logo_one} className="img_confirm" alt="" />
         </div>
 
-        <h2 style={{ color: '#ffffff', textAlign: 'center' }} className="title">
+        <h2
+          style={{
+            color: '#ffffff',
+            textAlign: 'center',
+            marginBottom: '10px',
+          }}
+          className="title"
+        >
           Créer un nouveau service
         </h2>
       </div>
@@ -94,7 +100,8 @@ function CreateServices() {
           style={{
             color: 'green',
             textAlign: 'center',
-            marginBottom: '10px',
+            marginTop: '32px',
+            marginBottom: '6px',
           }}
         >
           {success}
@@ -124,13 +131,13 @@ function CreateServices() {
         <input
           className="con_inpone_rapport"
           type="text"
-          value={formData.prix}
+          value={formData.prix_ht}
           placeholder="Prix"
           onChange={handleInputChange}
-          name="prix"
+          name="prix_ht"
           label="prix"
         />
-
+        {/* 
         <input
           className="con_inpone_rapport"
           type="text"
@@ -143,11 +150,11 @@ function CreateServices() {
           name="tel"
           label="tel"
           hidden
-        />
+        /> */}
 
         <div style={{ color: 'red', marginTop: '10px' }}>{error}</div>
 
-        <button onClick={insertUser} className="send_rapport">
+        <button onClick={createService} className="send_rapport">
           Enregistrer
         </button>
       </div>
